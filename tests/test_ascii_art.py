@@ -4,10 +4,12 @@ import pytest
 from ascii_art import (
     PALETTE,
     color_pair,
+    crop_square,
     iter_cells,
     luminance,
     palette_character,
     palette_index,
+    square_extent,
 )
 
 
@@ -51,6 +53,29 @@ def test_color_pair_white_is_max():
 
 def test_color_pair_honors_depth():
     assert color_pair(0, 0, 0, depth=4) == 1
+
+
+def test_crop_square_crops_center_of_wide_frame():
+    frame = numpy.arange(2 * 4 * 3, dtype=numpy.uint8).reshape(2, 4, 3)
+
+    cropped = crop_square(frame)
+
+    assert cropped.shape == (2, 2, 3)
+    assert numpy.array_equal(cropped, frame[0:2, 1:3])
+
+
+def test_crop_square_leaves_square_frame_unchanged():
+    frame = numpy.zeros((3, 3, 3), dtype=numpy.uint8)
+
+    assert crop_square(frame).shape == (3, 3, 3)
+
+
+def test_square_extent_is_width_limited_when_wide():
+    assert square_extent(20, 80) == (20, 40, 0, 20)
+
+
+def test_square_extent_is_height_limited_when_tall():
+    assert square_extent(50, 80) == (40, 80, 5, 0)
 
 
 def test_iter_cells_yields_every_pixel():

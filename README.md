@@ -56,6 +56,14 @@ also pick it directly with the `-d`/`--device` flag:
 uv run capture.py --device 1
 ```
 
+The image is cropped to a centered square and the aspect ratio is preserved, so
+it never looks stretched. The terminal cell ratio is auto-detected; if your
+terminal doesn't report it and the image still looks squished, tune it manually:
+
+```
+uv run capture.py --aspect 2.2
+```
+
 To quit the application, press `ESC` or `Ctrl + C` in the terminal.
 
 Note: You'll need a webcam connected to your computer for this to work. Enjoy using your webcam in the terminal!
