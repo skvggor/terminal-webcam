@@ -8,6 +8,8 @@ RED_WEIGHT = 0.2989
 GREEN_WEIGHT = 0.5866
 BLUE_WEIGHT = 0.1145
 
+CELL_ASPECT_RATIO = 2
+
 
 def luminance(blue, green, red):
     """Return the perceived brightness of a BGR pixel using Rec. 601 weights."""
@@ -30,6 +32,28 @@ def color_pair(blue, green, red, depth=6):
     green_level = int(green / 256.0 * depth)
     blue_level = int(blue / 256.0 * depth)
     return red_level * depth * depth + green_level * depth + blue_level + 1
+
+
+def crop_square(frame):
+    """Crop the centered square region of a BGR frame."""
+    height, width = frame.shape[0], frame.shape[1]
+    side = min(height, width)
+    top = (height - side) // 2
+    left = (width - side) // 2
+    return frame[top : top + side, left : left + side]
+
+
+def square_extent(rows, columns, cell_aspect=CELL_ASPECT_RATIO):
+    """Return (height, width, top, left) of the largest centered square that fits the terminal.
+
+    `cell_aspect` compensates for character cells being taller than they are wide,
+    so the rendered region looks square instead of stretched.
+    """
+    height = min(rows, int(columns / cell_aspect))
+    width = int(height * cell_aspect)
+    top = (rows - height) // 2
+    left = (columns - width) // 2
+    return height, width, top, left
 
 
 def iter_cells(frame):

@@ -106,6 +106,14 @@ def test_select_device_prompts_until_valid_choice(monkeypatch):
     assert webcam.select_device() == 2
 
 
+def test_compute_cell_aspect_from_pixels():
+    assert webcam.compute_cell_aspect(48, 160, 1280, 768) == pytest.approx(2.0)
+
+
+def test_compute_cell_aspect_falls_back_when_pixels_missing():
+    assert webcam.compute_cell_aspect(48, 160, 0, 0, default=2) == 2
+
+
 def test_terminal_size_parses_stty_output(monkeypatch):
     class FakeStream:
         def read(self):

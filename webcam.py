@@ -6,10 +6,11 @@ import fcntl
 import glob
 import os
 import struct
+import sys
 
 import cv2
 
-from ascii_art import iter_cells
+from ascii_art import CELL_ASPECT_RATIO, crop_square, iter_cells, square_extent
 
 ESCAPE_KEY = 27
 
@@ -20,6 +21,7 @@ V4L2_CAP_VIDEO_CAPTURE = 0x00000001
 V4L2_CAP_DEVICE_CAPS = 0x80000000
 V4L2_BUF_TYPE_VIDEO_CAPTURE = 1
 V4L2_FRMSIZE_TYPE_DISCRETE = 1
+TIOCGWINSZ = 0x5413
 
 
 @contextlib.contextmanager
@@ -172,17 +174,36 @@ def terminal_size():
     return rows, columns
 
 
-def run(draw, device=None, setup=None):  # pragma: no cover
+def compute_cell_aspect(rows, columns, x_pixels, y_pixels, default=CELL_ASPECT_RATIO):
+    """Return the cell height/width ratio from a terminal's pixel dimensions."""
+    if not all((rows, columns, x_pixels, y_pixels)):
+        return default
+    return (y_pixels * columns) / (x_pixels * rows)
+
+
+def cell_aspect_ratio(default=CELL_ASPECT_RATIO):  # pragma: no cover
+    """Measure the terminal cell height/width ratio, falling back to `default`."""
+    try:
+        packed = fcntl.ioctl(sys.stdout, TIOCGWINSZ, struct.pack('HHHH', 0, 0, 0, 0))
+    except OSError:
+        return default
+    rows, columns, x_pixels, y_pixels = struct.unpack('HHHH', packed)
+    return compute_cell_aspect(rows, columns, x_pixels, y_pixels, default)
+
+
+def run(draw, device=None, setup=None, cell_aspect=None):  # pragma: no cover
     """Run the curses capture loop, rendering each cell with `draw`.
 
     Args:
         draw: callback `draw(stdscr, x, y, blue, green, red)` for a single cell.
         device: webcam index, or None to select interactively.
         setup: optional `setup(stdscr)` run once after curses initialization.
+        cell_aspect: terminal cell height/width ratio, or None to measure it.
 
     The loop exits when ESC or Ctrl+C is pressed.
     """
     device = select_device(device)
+    aspect = cell_aspect if cell_aspect is not None else cell_aspect_ratio()
 
     with contextlib.suppress(AttributeError):
         cv2.utils.logging.setLogLevel(cv2.utils.logging.LOG_LEVEL_SILENT)
@@ -203,6 +224,7 @@ def run(draw, device=None, setup=None):  # pragma: no cover
             setup(stdscr)
 
         rows, columns = terminal_size()
+        height, width, top, left = square_extent(rows, columns, aspect)
 
         while True:
             if stdscr.getch() == ESCAPE_KEY:
@@ -212,11 +234,12 @@ def run(draw, device=None, setup=None):  # pragma: no cover
             if frame is None:
                 continue
 
-            thumbnail = cv2.resize(frame, (columns, rows))
+            thumbnail = cv2.resize(crop_square(frame), (width, height))
 
+            stdscr.erase()
             for x, y, blue, green, red in iter_cells(thumbnail):
                 try:
-                    draw(stdscr, x, y, blue, green, red)
+                    draw(stdscr, top + x, left + y, blue, green, red)
                 except curses.error:
                     pass
 

@@ -15,8 +15,15 @@ def draw(stdscr, x, y, blue, green, red):
 def main():  # pragma: no cover
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('-d', '--device', type=int, default=None, help='Webcam device index')
+    parser.add_argument(
+        '-a',
+        '--aspect',
+        type=float,
+        default=None,
+        help='Terminal cell height/width ratio (auto-detected when omitted)',
+    )
     args = parser.parse_args()
-    run(draw, device=args.device)
+    run(draw, device=args.device, cell_aspect=args.aspect)
 
 
 if __name__ == '__main__':
