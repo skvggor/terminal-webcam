@@ -28,7 +28,7 @@ select = ["E", "F", "I", "W", "UP", "B"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
-addopts = "--cov=ascii_art --cov-branch --cov-report=term-missing --cov-fail-under=80"
+addopts = "--cov=ascii_art --cov=webcam --cov=capture --cov=color --cov-branch --cov-report=term-missing --cov-fail-under=80"
 
 [tool.coverage.report]
 exclude_lines = ["pragma: no cover"]

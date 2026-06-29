@@ -49,7 +49,14 @@ For colored webcam output:
 uv run color.py
 ```
 
-To quit the application, press Ctrl + C in the terminal.
+If more than one webcam is connected, you'll be asked which one to use. You can
+also pick it directly with the `-d`/`--device` flag:
+
+```
+uv run capture.py --device 1
+```
+
+To quit the application, press `ESC` or `Ctrl + C` in the terminal.
 
 Note: You'll need a webcam connected to your computer for this to work. Enjoy using your webcam in the terminal!
 
