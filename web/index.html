@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#0b0a07" />
+
+    <title>terminal-webcam · your webcam, as ASCII art</title>
+    <meta
+      name="description"
+      content="Capture your webcam and render it as ASCII art right in your terminal. Monochrome or full color, with a live in-browser demo."
+    />
+    <meta name="author" content="skvggor" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://skvggor.github.io/terminal-webcam/" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="terminal-webcam" />
+    <meta property="og:url" content="https://skvggor.github.io/terminal-webcam/" />
+    <meta property="og:title" content="terminal-webcam · your webcam, as ASCII art" />
+    <meta
+      property="og:description"
+      content="Capture your webcam and render it as ASCII art right in your terminal. Monochrome or full color, with a live in-browser demo."
+    />
+    <meta property="og:image" content="https://skvggor.github.io/terminal-webcam/assets/img/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="terminal-webcam · your webcam, as ASCII art" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="terminal-webcam · your webcam, as ASCII art" />
+    <meta
+      name="twitter:description"
+      content="Capture your webcam and render it as ASCII art right in your terminal."
+    />
+    <meta name="twitter:image" content="https://skvggor.github.io/terminal-webcam/assets/img/og.png" />
+    <meta name="twitter:image:alt" content="terminal-webcam · your webcam, as ASCII art" />
+
+    <!-- Icons & manifest -->
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/icons/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="./assets/icons/icon-192.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./assets/icons/apple-touch-icon.png" />
+    <link rel="manifest" href="./site.webmanifest" />
+
+    <link rel="stylesheet" href="./css/style.css" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "terminal-webcam",
+        "description": "Capture your webcam and render it as ASCII art in the terminal.",
+        "applicationCategory": "MultimediaApplication",
+        "operatingSystem": "Linux",
+        "url": "https://skvggor.github.io/terminal-webcam/",
+        "codeRepository": "https://github.com/skvggor/terminal-webcam",
+        "programmingLanguage": "Python",
+        "license": "https://github.com/skvggor/terminal-webcam",
+        "author": { "@type": "Person", "name": "skvggor" },
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+      }
+    </script>
+  </head>
+  <body>
+    <div class="scanlines" aria-hidden="true"></div>
+
+    <header class="bar">
+      <div class="dots" aria-hidden="true"><span></span><span></span><span></span></div>
+      <span class="bar__title">terminal-webcam</span>
+      <a class="bar__link" href="https://github.com/skvggor/terminal-webcam">GitHub ↗</a>
+    </header>
+
+    <main>
+      <section class="hero">
+        <p class="prompt reveal"><span class="sigil">$</span> terminal-webcam<span class="cursor">█</span></p>
+        <h1 class="reveal">Your webcam,<br />as ASCII art.</h1>
+        <p class="lede reveal">
+          A tiny tool that grabs your webcam and paints it into your terminal.
+          Monochrome or full color, centered, square, no stretching.
+        </p>
+
+        <div class="copyline reveal">
+          <code id="install">uv run capture.py</code>
+          <button id="copy" class="btn btn--ghost" type="button" aria-label="Copy command">copy</button>
+        </div>
+      </section>
+
+      <section class="demo reveal" aria-labelledby="demo-title">
+        <h2 id="demo-title">Live demo</h2>
+        <figure class="nvim nvim--demo">
+          <div class="nvim__buf">
+            <div class="nvim__code">
+              <pre id="screen" class="screen" aria-label="Live ASCII webcam output">    press start to paint
+    your camera as ascii.
+
+    nothing leaves your
+    device. it all runs
+    here in the browser.</pre>
+            </div>
+          </div>
+          <figcaption class="nvim__status">
+            <span class="nvim__mode" id="status" data-live="false">○ IDLE</span>
+            <span class="nvim__file">webcam.ascii</span>
+            <span class="nvim__spacer"></span>
+            <span class="nvim__seg nvim__seg--opt">getUserMedia</span>
+            <span class="nvim__seg" id="screen-pos">0×0</span>
+          </figcaption>
+        </figure>
+        <div class="controls">
+          <button id="start" class="btn" type="button">▶ start camera</button>
+          <button id="stop" class="btn btn--ghost" type="button" hidden>■ stop</button>
+        </div>
+        <p class="fineprint">
+          Processed entirely in your browser via <code>getUserMedia</code>. No upload, no storage.
+        </p>
+      </section>
+
+      <section class="modes reveal" aria-labelledby="modes-title">
+        <h2 id="modes-title">Two modes</h2>
+        <div class="modes__grid">
+          <figure class="nvim nvim--image">
+            <div class="nvim__buf">
+              <div class="nvim__code">
+                <img src="./assets/img/colored_example.png" alt="Colored ASCII webcam example" loading="lazy" />
+              </div>
+            </div>
+            <figcaption class="nvim__status">
+              <span class="nvim__mode">COLOR</span>
+              <span class="nvim__file">color.py</span>
+              <span class="nvim__spacer"></span>
+              <span class="nvim__seg nvim__seg--opt">ascii</span>
+              <span class="nvim__seg">rgb</span>
+            </figcaption>
+          </figure>
+          <figure class="nvim nvim--image">
+            <div class="nvim__buf">
+              <div class="nvim__code">
+                <img src="./assets/img/monochrome_example.png" alt="Monochrome ASCII webcam example" loading="lazy" />
+              </div>
+            </div>
+            <figcaption class="nvim__status">
+              <span class="nvim__mode nvim__mode--mono">MONO</span>
+              <span class="nvim__file">capture.py</span>
+              <span class="nvim__spacer"></span>
+              <span class="nvim__seg nvim__seg--opt">ascii</span>
+              <span class="nvim__seg">gray</span>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="usage reveal" aria-labelledby="usage-title">
+        <h2 id="usage-title">Run it locally</h2>
+        <p>Linux, with <a href="https://docs.astral.sh/uv/">uv</a>:</p>
+        <pre class="code"><span class="c-dim"># clone &amp; install</span>
+git clone https://github.com/skvggor/terminal-webcam
+cd terminal-webcam
+uv sync
+
+<span class="c-dim"># monochrome / color</span>
+uv run capture.py
+uv run color.py
+
+<span class="c-dim"># list cameras and the detected aspect ratio</span>
+uv run capture.py --list
+
+<span class="c-dim"># pick a camera, tune aspect &amp; fps</span>
+uv run capture.py --device 2 --aspect 2.2 --fps 15</pre>
+        <p class="fineprint">Press <kbd>ESC</kbd> or <kbd>Ctrl</kbd>+<kbd>C</kbd> to quit.</p>
+      </section>
+
+      <section class="features reveal" aria-labelledby="features-title">
+        <h2 id="features-title">What's inside</h2>
+        <ul class="features__grid">
+          <li>
+            <figure class="nvim">
+              <div class="nvim__buf">
+                <div class="nvim__code">
+                  <div class="snip" data-code="side = min(height, width)
+top = (height - side) // 2
+left = (width - side) // 2
+return frame[top : top + side, left : left + side]"></div>
+                </div>
+              </div>
+              <figcaption class="nvim__status">
+                <span class="nvim__mode">NORMAL</span>
+                <span class="nvim__file">ascii_art.py</span>
+                <span class="nvim__spacer"></span>
+                <span class="nvim__seg nvim__seg--opt">python</span>
+                <span class="nvim__seg nvim__seg--opt">utf-8</span>
+                <span class="nvim__seg">4:41</span>
+              </figcaption>
+            </figure>
+            <strong>Square crop</strong>
+            <span>Centered, never stretched.</span>
+          </li>
+          <li>
+            <figure class="nvim">
+              <div class="nvim__buf">
+                <div class="nvim__code">
+                  <div class="snip" data-code="for index in capture_nodes:
+    name = device_name(index)
+    resolution = max_resolution(index)
+    devices.append((index, name, resolution))"></div>
+                </div>
+              </div>
+              <figcaption class="nvim__status">
+                <span class="nvim__mode">NORMAL</span>
+                <span class="nvim__file">webcam.py</span>
+                <span class="nvim__spacer"></span>
+                <span class="nvim__seg nvim__seg--opt">python</span>
+                <span class="nvim__seg nvim__seg--opt">utf-8</span>
+                <span class="nvim__seg">4:38</span>
+              </figcaption>
+            </figure>
+            <strong>Camera picker</strong>
+            <span>Lists real capture devices by name and resolution.</span>
+          </li>
+          <li>
+            <figure class="nvim">
+              <div class="nvim__buf">
+                <div class="nvim__code">
+                  <div class="snip" data-code="def frame_interval(fps):
+    if fps &lt;= 0:
+        return 1000
+    return max(1, int(1000 / fps))"></div>
+                </div>
+              </div>
+              <figcaption class="nvim__status">
+                <span class="nvim__mode">NORMAL</span>
+                <span class="nvim__file">webcam.py</span>
+                <span class="nvim__spacer"></span>
+                <span class="nvim__seg nvim__seg--opt">python</span>
+                <span class="nvim__seg nvim__seg--opt">utf-8</span>
+                <span class="nvim__seg">4:30</span>
+              </figcaption>
+            </figure>
+            <strong>FPS cap</strong>
+            <span>Throttled render loop, low CPU.</span>
+          </li>
+          <li>
+            <figure class="nvim">
+              <div class="nvim__buf">
+                <div class="nvim__code">
+                  <div class="snip" data-code="stdscr.timeout(frame_interval(fps))
+if stdscr.getch() == ESCAPE_KEY:
+    break"></div>
+                </div>
+              </div>
+              <figcaption class="nvim__status">
+                <span class="nvim__mode">NORMAL</span>
+                <span class="nvim__file">webcam.py</span>
+                <span class="nvim__spacer"></span>
+                <span class="nvim__seg nvim__seg--opt">python</span>
+                <span class="nvim__seg nvim__seg--opt">utf-8</span>
+                <span class="nvim__seg">3:9</span>
+              </figcaption>
+            </figure>
+            <strong>ESC to quit</strong>
+            <span>Non-blocking input, clean curses teardown.</span>
+          </li>
+        </ul>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <span><a href="https://github.com/skvggor/terminal-webcam">source on github</a></span>
+      <span class="foot__dim">built for the terminal</span>
+    </footer>
+
+    <script src="./js/main.js"></script>
+  </body>
+</html>

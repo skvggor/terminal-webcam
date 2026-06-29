@@ -80,6 +80,23 @@ def test_format_resolution_unknown():
     assert webcam.format_resolution(None) == 'unknown'
 
 
+def test_describe_devices_lists_each_camera_and_aspect():
+    devices = [(0, 'ACER HD', (1280, 720)), (2, 'Logitech BRIO', (4096, 2160))]
+
+    summary = webcam.describe_devices(devices, 2.0)
+
+    assert '[0] ACER HD (1280x720)' in summary
+    assert '[2] Logitech BRIO (4096x2160)' in summary
+    assert '2.00' in summary
+
+
+def test_describe_devices_handles_no_cameras():
+    summary = webcam.describe_devices([], 2.2)
+
+    assert 'No webcam found.' in summary
+    assert '2.20' in summary
+
+
 def test_select_device_returns_preferred_without_probing():
     assert webcam.select_device(preferred=3) == 3
 

@@ -13,6 +13,9 @@ dev = [
     "pytest>=8.3",
     "pytest-cov>=6.0",
     "ruff>=0.8",
+    "minify-html>=0.15",
+    "rcssmin>=1.1",
+    "rjsmin>=1.2",
 ]
 
 [tool.ruff]
@@ -28,7 +31,7 @@ select = ["E", "F", "I", "W", "UP", "B"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
-addopts = "--cov=ascii_art --cov=webcam --cov=capture --cov=color --cov-branch --cov-report=term-missing --cov-fail-under=80"
+addopts = "--cov=ascii_art --cov=webcam --cov=capture --cov=color --cov=build_site --cov-branch --cov-report=term-missing --cov-fail-under=80"
 
 [tool.coverage.report]
 exclude_lines = ["pragma: no cover"]

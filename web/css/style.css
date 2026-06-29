@@ -1,0 +1,611 @@
+/* Mobile-first. Base styles target small screens; media queries scale up. */
+
+:root {
+  --bg: #0b0a07;
+  --surface: #131109;
+  --border: #2a261d;
+  --text: #c1bcac;
+  --dim: #756d58;
+  --accent: #c6a468; /* sepia ink */
+  --accent-soft: rgba(198, 164, 104, 0.12);
+  --cool: #a9bcc2; /* cold bone silver */
+  --cool-soft: rgba(169, 188, 194, 0.1);
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --maxw: 60rem;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  cursor: url("../assets/cursors/cursor.svg") 13 13, crosshair;
+}
+
+a,
+button,
+.btn,
+[role="button"],
+label {
+  cursor: url("../assets/cursors/cursor-pointer.svg") 7 2, pointer;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover,
+a:focus-visible {
+  text-decoration: underline;
+}
+
+/* Scrollbar: thin, sepia-on-black to match the palette */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent) var(--bg);
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border: 3px solid var(--bg);
+  border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #d8b878;
+}
+
+::-webkit-scrollbar-corner {
+  background: var(--bg);
+}
+
+code,
+kbd {
+  font-family: var(--mono);
+}
+
+kbd {
+  border: 1px solid var(--border);
+  border-radius: 0;
+  padding: 0.05em 0.4em;
+  background: var(--surface);
+  font-size: 0.85em;
+}
+
+.scanlines {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0,
+    rgba(0, 0, 0, 0) 2px,
+    rgba(0, 0, 0, 0.14) 3px
+  );
+  opacity: 0.35;
+}
+
+/* Top bar */
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  padding-top: calc(0.75rem + env(safe-area-inset-top));
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in srgb, var(--bg) 80%, transparent);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  backdrop-filter: blur(6px);
+}
+
+.dots {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.dots span {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: var(--border);
+}
+
+.dots span:first-child {
+  background: #6e5f4a;
+}
+.dots span:nth-child(2) {
+  background: var(--accent);
+}
+.dots span:nth-child(3) {
+  background: var(--cool);
+}
+
+.bar__title {
+  color: var(--dim);
+  font-size: 0.85rem;
+}
+
+.bar__link {
+  margin-left: auto;
+  font-size: 0.85rem;
+}
+
+main {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 1.5rem 1rem 0;
+}
+
+section {
+  padding: 2rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+section:last-of-type {
+  border-bottom: none;
+}
+
+h1 {
+  font-size: clamp(2rem, 9vw, 3.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin: 0.5rem 0 1rem;
+  font-weight: 700;
+}
+
+h2 {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--dim);
+  margin: 0 0 1.25rem;
+  font-weight: 600;
+}
+
+/* Hero */
+.hero {
+  padding-top: 1.5rem;
+}
+
+.prompt {
+  color: var(--accent);
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.sigil {
+  color: var(--dim);
+  margin-right: 0.5rem;
+}
+
+.cursor {
+  display: inline-block;
+  margin-left: 0.15rem;
+  color: var(--accent);
+  text-shadow: 0 0 8px rgba(198, 164, 104, 0.6);
+  animation: blink 1.1s steps(1) infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.lede {
+  color: var(--dim);
+  max-width: 42ch;
+  font-size: 1.05rem;
+}
+
+.copyline {
+  display: flex;
+  align-items: stretch;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  max-width: 28rem;
+}
+
+.copyline code {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0;
+  padding: 0.7rem 0.9rem;
+  color: var(--text);
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.copyline code::before {
+  content: "$ ";
+  color: var(--dim);
+}
+
+/* Buttons */
+.btn {
+  font-family: var(--mono);
+  font-size: 0.95rem;
+  border: 1px solid var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-radius: 0;
+  padding: 0.7rem 1.1rem;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.05s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn:hover {
+  background: rgba(198, 164, 104, 0.2);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn--ghost {
+  border-color: var(--border);
+  background: var(--surface);
+  color: var(--dim);
+}
+
+.btn--ghost:hover {
+  color: var(--text);
+  background: #1b180f;
+}
+
+/* Live demo */
+.demo h2 {
+  margin-bottom: 1rem;
+}
+
+/* Demo rendered inside a Neovim frame */
+.nvim--demo .nvim__buf {
+  padding: 0;
+}
+
+.nvim__mode[data-live="true"],
+.nvim__mode--mono {
+  background: var(--cool);
+}
+
+/* Example images rendered inside a Neovim frame */
+.nvim--image .nvim__buf {
+  padding: 0;
+}
+
+.nvim--image img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: none;
+  border-radius: 0;
+}
+
+.screen {
+  margin: 0;
+  background: #060503;
+  border: none;
+  border-radius: 0;
+  padding: 0.75rem;
+  color: var(--cool);
+  font-size: 9px;
+  line-height: 1;
+  letter-spacing: 0;
+  white-space: pre;
+  overflow: hidden;
+  text-align: center;
+  min-height: 12rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-shadow: 0 0 4px rgba(169, 188, 194, 0.18);
+}
+
+.controls {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.controls .btn {
+  flex: 1;
+}
+
+.fineprint {
+  color: var(--dim);
+  font-size: 0.82rem;
+  margin-top: 0.9rem;
+}
+
+/* Modes */
+.modes__grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.modes figure {
+  margin: 0;
+}
+
+/* Usage code block */
+.code {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0;
+  padding: 1rem;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.7;
+  color: var(--text);
+}
+
+.c-dim {
+  color: var(--dim);
+}
+
+/* Syntax highlighting tokens */
+.hl-com {
+  color: var(--dim);
+  font-style: italic;
+}
+
+.hl-kw {
+  color: var(--accent);
+}
+
+.hl-bui {
+  color: #8fb3a6;
+}
+
+.hl-num {
+  color: #d8b878;
+}
+
+.hl-str {
+  color: #9fb083;
+}
+
+.hl-fn {
+  color: #d3cbb8;
+}
+
+.hl-cmd {
+  color: var(--accent);
+}
+
+.hl-flag {
+  color: var(--cool);
+}
+
+/* Features */
+.features__grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+}
+
+.features__grid li {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: 0;
+  padding: 1rem;
+  background: var(--surface);
+}
+
+.features__grid strong {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.features__grid span {
+  color: var(--dim);
+  font-size: 0.9rem;
+}
+
+/* Neovim-style buffer holding a typed source snippet */
+.nvim {
+  margin: 0 0 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 0;
+  background: #060503;
+  overflow: hidden;
+  min-width: 0;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.nvim__buf {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 0.5rem 0.7rem 0.6rem 0.5rem;
+}
+
+.nvim__gutter {
+  flex: none;
+  text-align: right;
+  color: #4a4538; /* LineNr */
+  user-select: none;
+}
+
+.nvim__gutter .cur {
+  color: var(--accent); /* CursorLineNr */
+}
+
+.nvim__code {
+  flex: 1;
+  min-width: 0;
+}
+
+.nvim__eob {
+  color: #2f3942; /* EndOfBuffer tildes */
+}
+
+.snip {
+  color: var(--cool);
+  white-space: pre;
+  overflow: hidden;
+  max-width: 100%;
+  /* fade long lines off the right edge */
+  -webkit-mask-image: linear-gradient(to right, #000 90%, transparent);
+  mask-image: linear-gradient(to right, #000 90%, transparent);
+}
+
+.snip::after {
+  content: "▋";
+  color: var(--accent);
+  margin-left: 1px;
+  animation: blink 1.1s steps(1) infinite;
+}
+
+/* lualine-style statusline */
+.nvim__status {
+  display: flex;
+  align-items: stretch;
+  font-size: 0.72rem;
+  background: #0e0c08;
+  border-top: 1px solid var(--border);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.nvim__mode {
+  background: var(--accent);
+  color: #0b0a07;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 0.28rem 0.7rem;
+  display: flex;
+  align-items: center;
+}
+
+.nvim__file {
+  color: var(--text);
+  padding: 0.28rem 0.6rem;
+  display: flex;
+  align-items: center;
+}
+
+.nvim__spacer {
+  flex: 1;
+}
+
+.nvim__seg {
+  color: var(--dim);
+  padding: 0.28rem 0.6rem;
+  display: flex;
+  align-items: center;
+}
+
+.nvim__seg + .nvim__seg,
+.nvim__file {
+  border-left: 1px solid var(--border);
+}
+
+/* Hide the less essential statusline segments on narrow screens */
+.nvim__seg--opt {
+  display: none;
+}
+
+@media (min-width: 520px) {
+  .nvim__seg--opt {
+    display: flex;
+  }
+}
+
+/* Footer */
+.foot {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+  padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+}
+
+.foot__dim {
+  color: var(--dim);
+}
+
+/* Reveal animation initial state (JS drives the spring) */
+.reveal {
+  will-change: transform, opacity;
+}
+
+/* Larger screens */
+@media (min-width: 720px) {
+  body {
+    font-size: 17px;
+  }
+
+  main {
+    padding: 2rem 2rem 0;
+  }
+
+  section {
+    padding: 3rem 0;
+  }
+
+  .screen {
+    font-size: 11px;
+    padding: 1.25rem;
+    min-height: 18rem;
+  }
+
+  .modes__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .features__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .features__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor {
+    animation: none;
+  }
+}
