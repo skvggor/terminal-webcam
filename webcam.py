@@ -144,6 +144,29 @@ def format_resolution(resolution):
     return f'{resolution[0]}x{resolution[1]}'
 
 
+def describe_devices(devices, aspect):
+    """Return a human-readable summary of the webcams and detected cell aspect ratio."""
+    lines = []
+
+    if devices:
+        lines.append('Webcams:')
+        for index, name, resolution in devices:
+            lines.append(f'  [{index}] {name} ({format_resolution(resolution)})')
+    else:
+        lines.append('No webcam found.')
+
+    lines.append('')
+    lines.append(f'Detected terminal cell aspect ratio: {aspect:.2f}')
+    lines.append('Run with --device <index>; if the image looks squished, tune --aspect.')
+
+    return '\n'.join(lines)
+
+
+def print_devices():  # pragma: no cover
+    """Print the webcam list and detected aspect ratio."""
+    print(describe_devices(list_devices(), cell_aspect_ratio()))
+
+
 def select_device(preferred=None):
     """Pick a webcam index, prompting the user when several are available."""
     if preferred is not None:
