@@ -106,6 +106,22 @@ def test_select_device_prompts_until_valid_choice(monkeypatch):
     assert webcam.select_device() == 2
 
 
+def test_frame_interval_for_thirty_fps():
+    assert webcam.frame_interval(30) == 33
+
+
+def test_frame_interval_for_one_fps():
+    assert webcam.frame_interval(1) == 1000
+
+
+def test_frame_interval_clamps_to_at_least_one_millisecond():
+    assert webcam.frame_interval(100000) == 1
+
+
+def test_frame_interval_handles_non_positive_fps():
+    assert webcam.frame_interval(0) == 1000
+
+
 def test_compute_cell_aspect_from_pixels():
     assert webcam.compute_cell_aspect(48, 160, 1280, 768) == pytest.approx(2.0)
 

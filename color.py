@@ -4,7 +4,7 @@ import argparse
 import curses
 
 from ascii_art import color_pair, palette_character
-from webcam import run
+from webcam import DEFAULT_FPS, run
 
 COLOR_DEPTH = 6
 
@@ -50,8 +50,11 @@ def main():  # pragma: no cover
         default=None,
         help='Terminal cell height/width ratio (auto-detected when omitted)',
     )
+    parser.add_argument(
+        '-f', '--fps', type=float, default=DEFAULT_FPS, help='Target frames per second'
+    )
     args = parser.parse_args()
-    run(draw, device=args.device, setup=setup, cell_aspect=args.aspect)
+    run(draw, device=args.device, setup=setup, cell_aspect=args.aspect, fps=args.fps)
 
 
 if __name__ == '__main__':

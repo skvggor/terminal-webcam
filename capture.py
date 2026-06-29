@@ -3,7 +3,7 @@
 import argparse
 
 from ascii_art import palette_character
-from webcam import run
+from webcam import DEFAULT_FPS, run
 
 
 def draw(stdscr, x, y, blue, green, red):
@@ -22,8 +22,11 @@ def main():  # pragma: no cover
         default=None,
         help='Terminal cell height/width ratio (auto-detected when omitted)',
     )
+    parser.add_argument(
+        '-f', '--fps', type=float, default=DEFAULT_FPS, help='Target frames per second'
+    )
     args = parser.parse_args()
-    run(draw, device=args.device, cell_aspect=args.aspect)
+    run(draw, device=args.device, cell_aspect=args.aspect, fps=args.fps)
 
 
 if __name__ == '__main__':
