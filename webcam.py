@@ -13,6 +13,7 @@ import cv2
 from ascii_art import CELL_ASPECT_RATIO, crop_square, iter_cells, square_extent
 
 ESCAPE_KEY = 27
+DEFAULT_FPS = 30
 
 VIDIOC_QUERYCAP = 0x80685600
 VIDIOC_ENUM_FMT = 0xC0405602
@@ -174,6 +175,13 @@ def terminal_size():
     return rows, columns
 
 
+def frame_interval(fps):
+    """Return the per-frame delay in milliseconds for a target FPS."""
+    if fps <= 0:
+        return 1000
+    return max(1, int(1000 / fps))
+
+
 def compute_cell_aspect(rows, columns, x_pixels, y_pixels, default=CELL_ASPECT_RATIO):
     """Return the cell height/width ratio from a terminal's pixel dimensions."""
     if not all((rows, columns, x_pixels, y_pixels)):
@@ -191,7 +199,7 @@ def cell_aspect_ratio(default=CELL_ASPECT_RATIO):  # pragma: no cover
     return compute_cell_aspect(rows, columns, x_pixels, y_pixels, default)
 
 
-def run(draw, device=None, setup=None, cell_aspect=None):  # pragma: no cover
+def run(draw, device=None, setup=None, cell_aspect=None, fps=DEFAULT_FPS):  # pragma: no cover
     """Run the curses capture loop, rendering each cell with `draw`.
 
     Args:
@@ -199,6 +207,7 @@ def run(draw, device=None, setup=None, cell_aspect=None):  # pragma: no cover
         device: webcam index, or None to select interactively.
         setup: optional `setup(stdscr)` run once after curses initialization.
         cell_aspect: terminal cell height/width ratio, or None to measure it.
+        fps: target frames per second, used to throttle the render loop.
 
     The loop exits when ESC or Ctrl+C is pressed.
     """
@@ -214,7 +223,7 @@ def run(draw, device=None, setup=None, cell_aspect=None):  # pragma: no cover
     stdscr = curses.initscr()
     curses.noecho()
     curses.cbreak()
-    stdscr.nodelay(True)
+    stdscr.timeout(frame_interval(fps))
 
     with contextlib.suppress(curses.error):
         curses.curs_set(0)

@@ -64,6 +64,13 @@ terminal doesn't report it and the image still looks squished, tune it manually:
 uv run capture.py --aspect 2.2
 ```
 
+The render loop is capped at 30 FPS to keep CPU usage low. Adjust it with
+`--fps`:
+
+```
+uv run capture.py --fps 15
+```
+
 To quit the application, press `ESC` or `Ctrl + C` in the terminal.
 
 Note: You'll need a webcam connected to your computer for this to work. Enjoy using your webcam in the terminal!
