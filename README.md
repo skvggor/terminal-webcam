@@ -15,12 +15,12 @@ This project captures images from your webcam and displays them in the terminal.
 
 ## Running the project
 
-This project is meant to be run on Linux. Follow the steps below to set it up:
+This project is meant to be run on Linux and uses [uv](https://docs.astral.sh/uv/) for dependency management.
 
 1. First, clone the repository:
 
 ```
-git clone https://github.com/mustafaakin/terminal-webcam.git
+git clone https://github.com/skvggor/terminal-webcam.git
 ```
 
 2. Navigate into the project directory:
@@ -29,43 +29,44 @@ git clone https://github.com/mustafaakin/terminal-webcam.git
 cd terminal-webcam
 ```
 
-3. Create a virtual environment using `venv`:
+3. Install the dependencies (uv creates the virtual environment automatically):
 
 ```
-python3 -m venv venv
+uv sync
 ```
 
-This will create a new directory `venv` in your project where all the dependencies will be installed.
-
-4. Activate the virtual environment:
-
-```
-source venv/bin/activate
-```
-
-5. Install the project dependencies from `requirements.txt`:
-
-```
-pip install -r requirements.txt
-```
-
-6. Run the scripts:
+4. Run the scripts:
 
 For monochrome webcam output:
 
 ```
-python3 capture.py
+uv run capture.py
 ```
 
 For colored webcam output:
 
 ```
-python3 color.py
+uv run color.py
 ```
 
 To quit the application, press Ctrl + C in the terminal.
 
 Note: You'll need a webcam connected to your computer for this to work. Enjoy using your webcam in the terminal!
+
+## Development
+
+Run the tests:
+
+```
+uv run pytest
+```
+
+Lint and format the code:
+
+```
+uv run ruff check .
+uv run ruff format .
+```
 
 ## Contributing
 
