@@ -5,6 +5,7 @@ import curses
 import fcntl
 import glob
 import os
+import signal
 import struct
 import sys
 
@@ -240,6 +241,10 @@ def run(draw, device=None, setup=None, cell_aspect=None, fps=DEFAULT_FPS):  # pr
     with contextlib.suppress(AttributeError):
         cv2.utils.logging.setLogLevel(cv2.utils.logging.LOG_LEVEL_SILENT)
 
+    # Disable OpenCV's internal thread pool: its non-daemon workers can keep the
+    # process alive after the loop ends, holding the camera open.
+    cv2.setNumThreads(0)
+
     with suppressed_stderr():
         capture = cv2.VideoCapture(device)
 
@@ -251,6 +256,14 @@ def run(draw, device=None, setup=None, cell_aspect=None, fps=DEFAULT_FPS):  # pr
     with contextlib.suppress(curses.error):
         curses.curs_set(0)
 
+    # Exit cleanly on Ctrl+C, kill, or the terminal closing, so the camera is
+    # always released instead of leaking to a lingering process.
+    def stop(_signum, _frame):
+        raise SystemExit(0)
+
+    for received in (signal.SIGINT, signal.SIGTERM, signal.SIGHUP):
+        signal.signal(received, stop)
+
     try:
         if setup is not None:
             setup(stdscr)
@@ -259,7 +272,7 @@ def run(draw, device=None, setup=None, cell_aspect=None, fps=DEFAULT_FPS):  # pr
         height, width, top, left = square_extent(rows, columns, aspect)
 
         while True:
-            if stdscr.getch() == ESCAPE_KEY:
+            if stdscr.getch() in (ESCAPE_KEY, ord('q'), ord('Q')):
                 break
 
             frame = capture.read()[1]
@@ -277,6 +290,9 @@ def run(draw, device=None, setup=None, cell_aspect=None, fps=DEFAULT_FPS):  # pr
 
             stdscr.refresh()
     finally:
-        curses.nocbreak()
-        curses.endwin()
+        with contextlib.suppress(Exception):
+            curses.nocbreak()
+            curses.echo()
+            curses.curs_set(1)
+            curses.endwin()
         capture.release()
